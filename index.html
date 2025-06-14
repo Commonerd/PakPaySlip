@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ur">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>پاک پے سلپ: پاکستان خالص تنخواہ کیلکولیٹر</title>
+    <meta
+      name="description"
+      content="پاکستان میں اپنی ماہانہ خالص تنخواہ کا فوری اندازہ لگائیں۔ پاکستانی ملازمین اور کاروباری مالکان کے لیے سادہ، تیز اور درست نیٹ پے کیلکولیٹر۔ ہماری بدیہی ٹول کے ساتھ اپنی ٹیک ہوم پے کو سمجھیں۔"
+    />
+    <meta
+      name="keywords"
+      content="پاکستان تنخواہ کیلکولیٹر, نیٹ پے پاکستان, انکم ٹیکس پاکستان, ٹیک ہوم پے پاکستان, تنخواہ کٹوتیاں پاکستان, پاکستان انکم ٹیکس سلیب, کیلکولیٹر, پے سلپ, تنخواہ, آمدنی, ٹیکس, کٹوتیاں, الاؤنسز, مجموعی تنخواہ, تنخواہ دار, کاروباری آمدنی, خود ملازم"
+    />
+    <!-- Favicon SVG - Light Green Circle with Rupee Symbol -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%236fdc7d'/%3E%3Ctext x='50%' y='60%' text-anchor='middle' font-size='50' font-family='Arial, sans-serif' fill='%23fff'%3E%E2%82%A8%3C/text%3E%3C/svg%3E"
+      type="image/svg+xml"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Inter Font for a modern and clean look */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f2f5; /* Light gray background */
+        direction: rtl; /* Set default text direction to right-to-left for Urdu */
+        text-align: right; /* Align text to the right for Urdu */
+      }
+      /* Override direction for specific elements if needed, e.g., numbers, labels */
+      input,
+      button,
+      .language-toggle,
+      #appTitle,
+      #appDescription,
+      #results,
+      #tipsSection,
+      #messageBox,
+      footer {
+        direction: ltr; /* Left-to-right for these elements */
+        text-align: left; /* Align text to the left for these elements */
+      }
+      #appTitle,
+      #appDescription,
+      #resultsTitle,
+      #netSalaryText,
+      #netSalary,
+      footer p {
+        text-align: center; /* Center these specific elements */
+      }
+      .language-toggle {
+        transition: background-color 0.3s, transform 0.2s;
+        left: 4rem; /* Adjust position for RTL layout */
+        right: auto;
+      }
+      .language-toggle:hover {
+        background-color: #4a5568; /* Darker gray on hover */
+        transform: translateY(-2px);
+      }
+      /* Custom styles for input focus */
+      input:focus,
+      select:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4); /* Tailwind's indigo-500 with opacity */
+      }
+      /* Custom radio button styles for a more Material 3 feel */
+      input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 1.25rem; /* 20px */
+        height: 1.25rem; /* 20px */
+        border: 2px solid #6366f1; /* indigo-500 */
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s ease-in-out;
+      }
+      input[type="radio"]:checked {
+        background-color: #6366f1; /* indigo-500 */
+        border-color: #6366f1;
+      }
+      input[type="radio"]:checked::after {
+        content: "";
+        width: 0.5rem; /* 8px */
+        height: 0.5rem; /* 8px */
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      input[type="radio"]:focus {
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4); /* Focus ring */
+      }
+      /* Adjust for RTL in radio button labels */
+      .flex-col label {
+        flex-direction: row-reverse; /* Swap input and text for RTL */
+        justify-content: flex-end; /* Align to right */
+      }
+      .flex-col label input[type="radio"] {
+        margin-right: 0; /* Remove default margin */
+        margin-left: 0.5rem; /* Add margin to the left for RTL */
+      }
+      .md\\:flex-row label {
+        flex-direction: row; /* Keep LTR for desktop horizontal layout */
+        justify-content: flex-start;
+      }
+      .md\\:flex-row label input[type="radio"] {
+        margin-right: 0.5rem; /* Restore default margin for LTR */
+        margin-left: 0;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div
+      class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md mx-auto relative overflow-hidden md:max-w-lg lg:max-w-xl"
+    >
+      <!-- Language Toggle Button -->
+      <button
+        id="langToggle"
+        class="language-toggle absolute top-4 right-4 bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded-full shadow-md hover:bg-gray-800 transition duration-300 ease-in-out"
+      >
+        ENG / اردو
+      </button>
+
+      <h1
+        id="appTitle"
+        class="text-3xl font-bold text-gray-800 mb-4 text-center md:text-4xl"
+      >
+        پاک پے سلپ: پاکستان خالص تنخواہ کیلکولیٹر
+      </h1>
+      <p
+        id="appDescription"
+        class="text-gray-600 mb-6 text-center text-sm leading-relaxed md:text-base"
+      >
+        انکم ٹیکس اور عام کٹوتیوں کے بعد پاکستان میں اپنی ماہانہ خالص تنخواہ کا
+        فوری اندازہ لگائیں۔ براہ کرم نوٹ کریں کہ ٹیکس کی شرحیں مثالی مثالیں ہیں۔
+        تازہ ترین معلومات کے لیے ہمیشہ سرکاری ذرائع سے رجوع کریں۔
+      </p>
+
+      <!-- Income Type Selection -->
+      <div class="mb-6">
+        <label
+          id="incomeTypeLabel"
+          class="block text-sm font-medium text-gray-700 mb-2"
+          >آمدنی کی قسم منتخب کریں:</label
+        >
+        <div
+          class="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-6"
+        >
+          <label
+            for="salaried"
+            class="inline-flex items-center cursor-pointer p-3 bg-indigo-50 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition duration-200 ease-in-out"
+          >
+            <input
+              type="radio"
+              id="salaried"
+              name="incomeType"
+              value="salaried"
+              class="form-radio text-indigo-600 focus:ring-indigo-500 mr-2"
+              checked
+            />
+            <span id="salariedText" class="text-gray-800 font-medium"
+              >تنخواہ دار ملازم</span
+            >
+          </label>
+          <label
+            for="business"
+            class="inline-flex items-center cursor-pointer p-3 bg-indigo-50 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition duration-200 ease-in-out"
+          >
+            <input
+              type="radio"
+              id="business"
+              name="incomeType"
+              value="business"
+              class="form-radio text-indigo-600 focus:ring-indigo-500 mr-2"
+            />
+            <span id="businessText" class="text-gray-800 font-medium"
+              >کاروباری مالک / اے او پی</span
+            >
+          </label>
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <div class="space-y-4 mb-6">
+        <div>
+          <label
+            id="grossSalaryLabel"
+            for="grossSalary"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >ماہانہ مجموعی تنخواہ (PKR)</label
+          >
+          <input
+            type="number"
+            id="grossSalary"
+            placeholder="e.g., 100000"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+        <div>
+          <label
+            id="allowancesLabel"
+            for="allowances"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >کل ماہانہ الاؤنسز (PKR، اختیاری)</label
+          >
+          <input
+            type="number"
+            id="allowances"
+            placeholder="e.g., 10000"
+            value="0"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+        <div>
+          <label
+            id="otherDeductionsLabel"
+            for="otherDeductions"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >دیگر ماہانہ کٹوتیاں (PKR، اختیاری)</label
+          >
+          <input
+            type="number"
+            id="otherDeductions"
+            placeholder="e.g., 5000"
+            value="0"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+      </div>
+
+      <!-- Calculate Button -->
+      <button
+        id="calculateBtn"
+        class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        خالص تنخواہ کا حساب لگائیں
+      </button>
+
+      <!-- Results Section -->
+      <div
+        id="results"
+        class="mt-8 space-y-3 p-4 bg-indigo-50 rounded-lg shadow-inner border border-indigo-200"
+        style="display: none"
+      >
+        <h2
+          id="resultsTitle"
+          class="text-xl font-bold text-indigo-800 mb-3 text-center md:text-2xl"
+        >
+          حساب کا خلاصہ
+        </h2>
+        <p class="text-gray-800 text-lg md:text-xl">
+          <strong id="taxableIncomeText">قابل ٹیکس آمدنی:</strong>
+          <span id="taxableIncome" class="font-semibold text-indigo-700"
+            >PKR 0</span
+          >
+        </p>
+        <p class="text-gray-800 text-lg md:text-xl">
+          <strong id="incomeTaxText">متوقع انکم ٹیکس:</strong>
+          <span id="incomeTax" class="font-semibold text-red-600">PKR 0</span>
+        </p>
+        <p class="text-gray-800 text-lg md:text-xl">
+          <strong id="totalDeductionsText">کل کٹوتیاں:</strong>
+          <span id="totalDeductions" class="font-semibold text-red-600"
+            >PKR 0</span
+          >
+        </p>
+        <hr class="border-indigo-300 my-2" />
+        <p class="text-gray-900 text-2xl font-bold text-center md:text-3xl">
+          <strong id="netSalaryText">آپ کی متوقع ماہانہ خالص تنخواہ:</strong>
+          <span id="netSalary" class="text-green-600">PKR 0</span>
+        </p>
+      </div>
+
+      <!-- Tips/Advice Section - Differentiated Feature -->
+      <div
+        id="tipsSection"
+        class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-md"
+        style="display: none"
+      >
+        <h3
+          id="tipsTitle"
+          class="text-lg font-semibold text-blue-800 mb-2 md:text-xl"
+        >
+          💡 آپ کی تنخواہ کے لیے فوری بصیرتیں
+        </h3>
+        <p id="tipMessage" class="text-blue-700 text-sm md:text-base"></p>
+      </div>
+
+      <!-- Message Box for Alerts -->
+      <div
+        id="messageBox"
+        class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4"
+        style="display: none"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center"
+        >
+          <p id="messageContent" class="text-gray-800 text-lg mb-4"></p>
+          <button
+            id="closeMessageBox"
+            class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            ٹھیک ہے
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-8 text-gray-500 text-sm text-center">
+      <p id="footerDisclaimer">
+        اعلان دستبرداری: یہ کیلکولیٹر آسان، مثالی ٹیکس قوانین اور عام کٹوتیوں پر
+        مبنی تخمینہ فراہم کرتا ہے۔ اصل ٹیکس ذمہ داریاں اور کٹوتیاں مختلف ہو سکتی
+        ہیں۔ درست اور تازہ ترین معلومات کے لیے براہ کرم سرکاری ذرائع یا ٹیکس
+        پیشہ ور سے رجوع کریں۔ تنخواہ دار اور کاروباری افراد کے لیے ٹیکس کی شرحیں
+        صرف مظاہرے کے مقاصد کے لیے مثالی مثالیں ہیں۔
+      </p>
+    </footer>
+
+    <script>
+      const langToggleBtn = document.getElementById("langToggle");
+      const appTitle = document.getElementById("appTitle");
+      const appDescription = document.getElementById("appDescription");
+      const incomeTypeLabel = document.getElementById("incomeTypeLabel");
+      const salariedRadio = document.getElementById("salaried");
+      const businessRadio = document.getElementById("business");
+      const salariedText = document.getElementById("salariedText");
+      const businessText = document.getElementById("businessText");
+      const grossSalaryLabel = document.getElementById("grossSalaryLabel");
+      const allowancesLabel = document.getElementById("allowancesLabel");
+      const otherDeductionsLabel = document.getElementById(
+        "otherDeductionsLabel"
+      );
+      const calculateBtn = document.getElementById("calculateBtn");
+      const resultsDiv = document.getElementById("results");
+      const resultsTitle = document.getElementById("resultsTitle");
+      const taxableIncomeText = document.getElementById("taxableIncomeText");
+      const incomeTaxText = document.getElementById("incomeTaxText");
+      const totalDeductionsText = document.getElementById(
+        "totalDeductionsText"
+      );
+      const netSalaryText = document.getElementById("netSalaryText");
+      const grossSalaryInput = document.getElementById("grossSalary");
+      const allowancesInput = document.getElementById("allowances");
+      const otherDeductionsInput = document.getElementById("otherDeductions");
+      const taxableIncomeSpan = document.getElementById("taxableIncome");
+      const incomeTaxSpan = document.getElementById("incomeTax");
+      const totalDeductionsSpan = document.getElementById("totalDeductions");
+      const netSalarySpan = document.getElementById("netSalary");
+      const tipsSection = document.getElementById("tipsSection");
+      const tipsTitle = document.getElementById("tipsTitle");
+      const tipMessage = document.getElementById("tipMessage");
+      const footerDisclaimer = document.getElementById("footerDisclaimer");
+      const messageBox = document.getElementById("messageBox");
+      const messageContent = document.getElementById("messageContent");
+      const closeMessageBoxBtn = document.getElementById("closeMessageBox");
+
+      let currentLang = "ur"; // Default language set to Urdu
+      let currentIncomeType = "salaried"; // Default income type
+
+      // Text content for English and Urdu
+      const textContent = {
+        en: {
+          appTitle: "PakPaySlip: Pakistan Net Salary Calculator",
+          appDescription:
+            "Quickly estimate your monthly take-home salary in Pakistan after income tax and common deductions. Please note that tax rates are illustrative examples. Always consult official sources for the most current information.",
+          incomeTypeLabel: "Select Income Type:",
+          salariedText: "Salaried Employee",
+          businessText: "Business Owner / AOP",
+          grossSalaryLabel: "Monthly Gross Salary (PKR)",
+          allowancesLabel: "Total Monthly Allowances (PKR, optional)",
+          otherDeductionsLabel: "Other Monthly Deductions (PKR, optional)",
+          calculateBtn: "Calculate Net Salary",
+          resultsTitle: "Calculation Summary",
+          taxableIncomeText: "Taxable Income:",
+          incomeTaxText: "Estimated Income Tax:",
+          totalDeductionsText: "Total Deductions:",
+          netSalaryText: "Your Estimated Monthly Net Salary:",
+          tipsTitle: "💡 Quick Insights for Your Pay",
+          footerDisclaimer:
+            "Disclaimer: This calculator provides an estimation based on simplified, illustrative tax rules and general deductions. Actual tax liabilities and deductions may vary. Please consult official government sources or a tax professional for precise and up-to-date information. Tax rates for salaried and business individuals are illustrative examples for demonstration purposes only.",
+          invalidInput:
+            "Please enter a valid positive number for gross salary.",
+          lowSalaryTip:
+            "Your salary might be below the taxable threshold. Great for your take-home pay!",
+          moderateSalaryTip:
+            "Your income tax is a significant portion. Consider tax-saving investments if applicable.",
+          highSalaryTip:
+            "With a higher income, effective tax planning can be very beneficial. Explore all available deductions!",
+          defaultTip:
+            "Understand your deductions to maximize your take-home pay!",
+          negativeInput: "Please enter non-negative values for all inputs.",
+        },
+        ur: {
+          appTitle: "پاک پے سلپ: پاکستان خالص تنخواہ کیلکولیٹر",
+          appDescription:
+            "انکم ٹیکس اور عام کٹوتیوں کے بعد پاکستان میں اپنی ماہانہ خالص تنخواہ کا فوری اندازہ لگائیں۔ براہ کرم نوٹ کریں کہ ٹیکس کی شرحیں مثالی مثالیں ہیں۔ تازہ ترین معلومات کے لیے ہمیشہ سرکاری ذرائع سے رجوع کریں۔",
+          incomeTypeLabel: "آمدنی کی قسم منتخب کریں:",
+          salariedText: "تنخواہ دار ملازم",
+          businessText: "کاروباری مالک / اے او پی",
+          grossSalaryLabel: "ماہانہ مجموعی تنخواہ (PKR)",
+          allowancesLabel: "کل ماہانہ الاؤنسز (PKR، اختیاری)",
+          otherDeductionsLabel: "دیگر ماہانہ کٹوتیاں (PKR، اختیاری)",
+          calculateBtn: "خالص تنخواہ کا حساب لگائیں",
+          resultsTitle: "حساب کا خلاصہ",
+          taxableIncomeText: "قابل ٹیکس آمدنی:",
+          incomeTaxText: "متوقع انکم ٹیکس:",
+          totalDeductionsText: "کل کٹوتیاں:",
+          netSalaryText: "آپ کی متوقع ماہانہ خالص تنخواہ:",
+          tipsTitle: "💡 آپ کی تنخواہ کے لیے فوری بصیرتیں",
+          footerDisclaimer:
+            "اعلان دستبرداری: یہ کیلکولیٹر آسان، مثالی ٹیکس قوانین اور عام کٹوتیوں پر مبنی تخمینہ فراہم کرتا ہے۔ اصل ٹیکس ذمہ داریاں اور کٹوتیاں مختلف ہو سکتی ہیں۔ درست اور تازہ ترین معلومات کے لیے براہ کرم سرکاری ذرائع یا ٹیکس پیشہ ور سے رجوع کریں۔ تنخواہ دار اور کاروباری افراد کے لیے ٹیکس کی شرحیں صرف مظاہرے کے مقاصد کے لیے مثالی مثالیں ہیں۔",
+          invalidInput:
+            "براہ کرم مجموعی تنخواہ کے لیے درست مثبت نمبر درج کریں۔",
+          lowSalaryTip:
+            "آپ کی تنخواہ قابل ٹیکس حد سے کم ہو سکتی ہے۔ آپ کے ٹیک ہوم پے کے لیے بہت اچھا ہے!",
+          moderateSalaryTip:
+            "آپ کی انکم ٹیکس کا ایک اہم حصہ ہے۔ اگر قابل اطلاق ہو تو ٹیکس بچت سرمایہ کاری پر غور کریں۔",
+          highSalaryTip:
+            "زیادہ آمدنی کے ساتھ، موثر ٹیکس منصوبہ بندی بہت فائدہ مند ہو سکتی ہے۔ تمام دستیاب کٹوتیوں کو تلاش کریں!",
+          defaultTip:
+            "اپنی ٹیک ہوم پے کو زیادہ سے زیادہ کرنے کے لیے اپنی کٹوتیوں کو سمجھیں!",
+          negativeInput: "براہ کرم تمام ان پٹ کے لیے غیر منفی قدریں درج کریں۔",
+        },
+      };
+
+      /**
+       * Updates the UI elements based on the current language setting.
+       */
+      function updateLanguage() {
+        const content = textContent[currentLang];
+        appTitle.textContent = content.appTitle;
+        appDescription.textContent = content.appDescription;
+        incomeTypeLabel.textContent = content.incomeTypeLabel;
+        salariedText.textContent = content.salariedText;
+        businessText.textContent = content.businessText;
+        grossSalaryLabel.textContent = content.grossSalaryLabel;
+        allowancesLabel.textContent = content.allowancesLabel;
+        otherDeductionsLabel.textContent = content.otherDeductionsLabel;
+        calculateBtn.textContent = content.calculateBtn;
+        resultsTitle.textContent = content.resultsTitle;
+        taxableIncomeText.textContent = content.taxableIncomeText;
+        incomeTaxText.textContent = content.incomeTaxText;
+        totalDeductionsText.textContent = content.totalDeductionsText;
+        netSalaryText.textContent = content.netSalaryText;
+        tipsTitle.textContent = content.tipsTitle;
+        footerDisclaimer.textContent = content.footerDisclaimer;
+        closeMessageBoxBtn.textContent =
+          currentLang === "en" ? "OK" : "ٹھیک ہے"; // Update message box button text
+
+        // Update language toggle button text
+        langToggleBtn.textContent =
+          currentLang === "en" ? "اردو / ENG" : "ENG / اردو";
+
+        // Set HTML lang attribute and body direction
+        document.documentElement.lang = currentLang;
+        document.body.style.direction = currentLang === "ur" ? "rtl" : "ltr";
+        document.body.style.textAlign = currentLang === "ur" ? "right" : "left";
+
+        // Apply specific direction and text-align overrides for LTR elements
+        const ltrElements = document.querySelectorAll(
+          "input, button, .language-toggle, #results, #tipsSection, #messageBox, footer"
+        );
+        ltrElements.forEach((el) => {
+          el.style.direction = "ltr";
+          el.style.textAlign = "left";
+        });
+
+        // Center align specific elements
+        const centerElements = document.querySelectorAll(
+          "#appTitle, #appDescription, #resultsTitle, #netSalaryText, #netSalary, footer p"
+        );
+        centerElements.forEach((el) => {
+          el.style.textAlign = "center";
+        });
+
+        // Adjust language toggle button position based on direction
+        if (currentLang === "ur") {
+          langToggleBtn.style.left = "4rem";
+          langToggleBtn.style.right = "auto";
+        } else {
+          langToggleBtn.style.right = "4rem";
+          langToggleBtn.style.left = "auto";
+        }
+
+        // Adjust radio button label direction for RTL
+        const radioLabels = document.querySelectorAll(".flex-col label");
+        radioLabels.forEach((label) => {
+          if (currentLang === "ur") {
+            label.style.flexDirection = "row-reverse";
+            label.style.justifyContent = "flex-end";
+            label.querySelector('input[type="radio"]').style.marginRight = "0";
+            label.querySelector('input[type="radio"]').style.marginLeft =
+              "0.5rem";
+          } else {
+            label.style.flexDirection = "row";
+            label.style.justifyContent = "flex-start";
+            label.querySelector('input[type="radio"]').style.marginRight =
+              "0.5rem";
+            label.querySelector('input[type="radio"]').style.marginLeft = "0";
+          }
+        });
+      }
+
+      /**
+       * Displays a custom message box with the given message.
+       * @param {string} message - The message to display.
+       */
+      function showMessageBox(message) {
+        messageContent.textContent = message;
+        messageBox.style.display = "flex";
+      }
+
+      /**
+       * Hides the custom message box.
+       */
+      function hideMessageBox() {
+        messageBox.style.display = "none";
+      }
+
+      closeMessageBoxBtn.addEventListener("click", hideMessageBox);
+
+      /**
+       * Calculates the estimated annual income tax based on simplified, illustrative Pakistan tax slabs.
+       * IMPORTANT: These rates are for demonstration purposes ONLY and may not reflect current official tax rates.
+       * Users should consult official FBR (Federal Board of Revenue) sources for accurate information.
+       * @param {number} annualTaxableIncome - The annual taxable income in PKR.
+       * @param {string} incomeType - 'salaried' or 'business'.
+       * @returns {number} The estimated annual income tax.
+       */
+      function calculateIncomeTax(annualTaxableIncome, incomeType) {
+        if (incomeType === "salaried") {
+          if (annualTaxableIncome <= 600000) {
+            return 0;
+          } else if (annualTaxableIncome <= 1200000) {
+            // PKR 0 + 2.5% of the amount exceeding PKR 600,000
+            return (annualTaxableIncome - 600000) * 0.025;
+          } else if (annualTaxableIncome <= 2400000) {
+            // PKR 15,000 + 12.5% of the amount exceeding PKR 1,200,000
+            return 15000 + (annualTaxableIncome - 1200000) * 0.125;
+          } else if (annualTaxableIncome <= 3600000) {
+            // PKR 165,000 + 22.5% of the amount exceeding PKR 2,400,000
+            return 165000 + (annualTaxableIncome - 2400000) * 0.225;
+          } else if (annualTaxableIncome <= 6000000) {
+            // PKR 435,000 + 27.5% of the amount exceeding PKR 3,600,000
+            return 435000 + (annualTaxableIncome - 3600000) * 0.275;
+          } else {
+            // PKR 1,095,000 + 35% of the amount exceeding PKR 6,000,000
+            return 1095000 + (annualTaxableIncome - 6000000) * 0.35;
+          }
+        } else if (incomeType === "business") {
+          // Illustrative tax slabs for Business Owner / AOP (Association of Persons)
+          // These are simplified and for demonstration purposes only.
+          if (annualTaxableIncome <= 600000) {
+            return 0;
+          } else if (annualTaxableIncome <= 1200000) {
+            // PKR 0 + 7.5% of the amount exceeding PKR 600,000
+            return (annualTaxableIncome - 600000) * 0.075;
+          } else if (annualTaxableIncome <= 2400000) {
+            // PKR 45,000 + 15% of the amount exceeding PKR 1,200,000
+            return 45000 + (annualTaxableIncome - 1200000) * 0.15;
+          } else if (annualTaxableIncome <= 3600000) {
+            // PKR 225,000 + 20% of the amount exceeding PKR 2,400,000
+            return 225000 + (annualTaxableIncome - 2400000) * 0.2;
+          } else if (annualTaxableIncome <= 6000000) {
+            // PKR 465,000 + 25% of the amount exceeding PKR 3,600,000
+            return 465000 + (annualTaxableIncome - 3600000) * 0.25;
+          } else {
+            // PKR 1,065,000 + 35% of the amount exceeding PKR 6,000,000
+            return 1065000 + (annualTaxableIncome - 6000000) * 0.35;
+          }
+        }
+        return 0; // Default case
+      }
+
+      /**
+       * Generates a tip message based on the calculated net salary.
+       * @param {number} netSalary - The calculated monthly net salary.
+       * @param {number} grossSalary - The input monthly gross salary.
+       * @param {number} incomeTax - The calculated monthly income tax.
+       * @param {string} incomeType - The selected income type ('salaried' or 'business').
+       * @returns {string} The tip message.
+       */
+      function generateTip(netSalary, grossSalary, incomeTax, incomeType) {
+        const content = textContent[currentLang];
+        // Taxable threshold varies by income type for general tips
+        const annualTaxableThreshold =
+          incomeType === "salaried" ? 600000 : 600000; // Using same illustrative threshold for both for simplicity in tips
+
+        if (grossSalary <= annualTaxableThreshold / 12) {
+          // Roughly below annual taxable threshold
+          return content.lowSalaryTip;
+        } else if (incomeTax / grossSalary > 0.15) {
+          // If tax is more than 15% of gross
+          return content.highSalaryTip;
+        } else if (incomeTax > 0) {
+          return content.moderateSalaryTip;
+        } else {
+          return content.defaultTip;
+        }
+      }
+
+      /**
+       * Saves the current input values and selected income type to local storage.
+       */
+      function saveInputs() {
+        localStorage.setItem("grossSalary", grossSalaryInput.value);
+        localStorage.setItem("allowances", allowancesInput.value);
+        localStorage.setItem("otherDeductions", otherDeductionsInput.value);
+        localStorage.setItem("incomeType", currentIncomeType);
+      }
+
+      /**
+       * Loads input values and selected income type from local storage, if available.
+       */
+      function loadInputs() {
+        const savedGrossSalary = localStorage.getItem("grossSalary");
+        const savedAllowances = localStorage.getItem("allowances");
+        const savedOtherDeductions = localStorage.getItem("otherDeductions");
+        const savedIncomeType = localStorage.getItem("incomeType");
+
+        if (savedGrossSalary) {
+          grossSalaryInput.value = savedGrossSalary;
+        }
+        if (savedAllowances) {
+          allowancesInput.value = savedAllowances;
+        }
+        if (savedOtherDeductions) {
+          otherDeductionsInput.value = savedOtherDeductions;
+        }
+        if (savedIncomeType) {
+          currentIncomeType = savedIncomeType;
+          if (currentIncomeType === "salaried") {
+            salariedRadio.checked = true;
+          } else {
+            businessRadio.checked = true;
+          }
+        }
+      }
+
+      /**
+       * Main function to perform salary calculation and update UI.
+       */
+      function calculateNetSalary() {
+        const grossSalary = parseFloat(grossSalaryInput.value);
+        const allowances = parseFloat(allowancesInput.value) || 0;
+        const otherDeductions = parseFloat(otherDeductionsInput.value) || 0;
+
+        // Input validation
+        if (isNaN(grossSalary) || grossSalary <= 0) {
+          showMessageBox(textContent[currentLang].invalidInput);
+          resultsDiv.style.display = "none";
+          tipsSection.style.display = "none";
+          return;
+        }
+        if (allowances < 0 || otherDeductions < 0) {
+          showMessageBox(textContent[currentLang].negativeInput);
+          resultsDiv.style.display = "none";
+          tipsSection.style.display = "none";
+          return;
+        }
+
+        // Save inputs to local storage
+        saveInputs();
+
+        // Calculate monthly basic income (simplified: Gross - Allowances)
+        // A real scenario would involve Basic Pay + House Rent Allowance + Conveyance Allowance, etc.
+        // For simplicity, we assume taxable income is Gross Salary - Allowances.
+        const taxableIncomeMonthly = grossSalary - allowances;
+        const annualTaxableIncome = taxableIncomeMonthly * 12;
+
+        // Calculate annual income tax based on selected income type
+        const annualIncomeTax = calculateIncomeTax(
+          annualTaxableIncome,
+          currentIncomeType
+        );
+        const monthlyIncomeTax = annualIncomeTax / 12;
+
+        // Other standard deductions (illustrative fixed values for simplicity)
+        // EOBI (Employees' Old-Age Benefits Institution) - Example fixed monthly contribution
+        // This deduction is typically for salaried employees, but we include it for simplicity.
+        const eobiDeduction = currentIncomeType === "salaried" ? 250 : 0; // Only for salaried
+
+        // Total monthly deductions
+        const totalDeductions =
+          monthlyIncomeTax + eobiDeduction + otherDeductions;
+
+        // Calculate net salary
+        const netSalary = grossSalary - totalDeductions;
+
+        // Display results
+        taxableIncomeSpan.textContent = `PKR ${taxableIncomeMonthly.toLocaleString(
+          undefined,
+          { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+        )}`;
+        incomeTaxSpan.textContent = `PKR ${monthlyIncomeTax.toLocaleString(
+          undefined,
+          { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+        )}`;
+        totalDeductionsSpan.textContent = `PKR ${totalDeductions.toLocaleString(
+          undefined,
+          { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+        )}`;
+        netSalarySpan.textContent = `PKR ${netSalary.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        })}`;
+
+        resultsDiv.style.display = "block";
+
+        // Display tips
+        tipMessage.textContent = generateTip(
+          netSalary,
+          grossSalary,
+          monthlyIncomeTax,
+          currentIncomeType
+        );
+        tipsSection.style.display = "block";
+      }
+
+      // Event Listeners
+      langToggleBtn.addEventListener("click", () => {
+        currentLang = currentLang === "en" ? "ur" : "en";
+        updateLanguage();
+      });
+
+      // Event listeners for income type radio buttons
+      salariedRadio.addEventListener("change", () => {
+        currentIncomeType = "salaried";
+        saveInputs(); // Save the new income type
+        calculateNetSalary(); // Recalculate with new type
+      });
+      businessRadio.addEventListener("change", () => {
+        currentIncomeType = "business";
+        saveInputs(); // Save the new income type
+        calculateNetSalary(); // Recalculate with new type
+      });
+
+      calculateBtn.addEventListener("click", calculateNetSalary);
+
+      // Load inputs on page load
+      window.addEventListener("load", () => {
+        loadInputs();
+        updateLanguage(); // Initial language update
+        // Perform an initial calculation if values are loaded, or if default values exist.
+        // This prevents an empty state if user just loads the page with saved data.
+        if (grossSalaryInput.value && parseFloat(grossSalaryInput.value) > 0) {
+          calculateNetSalary();
+        }
+      });
+
+      // Optionally, recalculate on input change for dynamic updates
+      grossSalaryInput.addEventListener("input", calculateNetSalary);
+      allowancesInput.addEventListener("input", calculateNetSalary);
+      otherDeductionsInput.addEventListener("input", calculateNetSalary);
+    </script>
+  </body>
+</html>
